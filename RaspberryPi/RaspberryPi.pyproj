@@ -22,10 +22,18 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="bluetooth.py" />
-    <Compile Include="jobs.py" />
-    <Compile Include="main.py" />
-    <Compile Include="tasks.py" />
+    <Compile Include="Source\bluetooth.py" />
+    <Compile Include="Source\jobs.py" />
+    <Compile Include="Source\main.py" />
+    <Compile Include="Source\tasks.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Source\" />
+    <Folder Include="Source\__pycache__\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Source\__pycache__\bluetooth.cpython-38.pyc" />
+    <Content Include="Source\__pycache__\tasks.cpython-38.pyc" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in
