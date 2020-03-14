@@ -16,7 +16,7 @@ class bluetooth:
         self.last_msg = None
 
 
-    def rx_check(self):
+    def check_nowait(self):
         # log function execution
         logging.info("{t}       Executing bluetooth::rx_check()".format(t=datetime.utcnow().strftime('%H:%M:%S.%f')[:-3]))
 
