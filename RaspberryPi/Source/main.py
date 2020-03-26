@@ -2,11 +2,10 @@
 #   main.py
 #
 
-
 import asyncio
 import logging
 from datetime import datetime
-from Source.tasks import schedule_tasks
+from tasks import *
 
 
 # set the logging level

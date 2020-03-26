@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>a47acbb7-3e1a-4ae9-b1a1-0f3416872e51</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Source\main.py</StartupFile>
+    <StartupFile>source\main.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -22,12 +22,17 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Source\bluetooth.py" />
-    <Compile Include="Source\main.py" />
-    <Compile Include="Source\tasks.py" />
+    <Compile Include="source\jobs.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="source\main.py" />
+    <Compile Include="source\sock_server.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="source\tasks.py" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Source\" />
+    <Folder Include="source\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in
