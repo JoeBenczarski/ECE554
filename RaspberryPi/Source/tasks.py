@@ -33,7 +33,8 @@ async def idle_coro():
 
 
 async def bluetooth_coro():
-    ip_addr = '127.0.0.1'
+    #ip_addr = '127.0.0.1'
+    ip_addr = ''
     ip_port = 65432
     bt_addr = '9c:b6:d0:c3:26:e8'
     bt_port = 3
