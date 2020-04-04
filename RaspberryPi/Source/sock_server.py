@@ -21,34 +21,38 @@ class sock_server(object):
     async def get(self):
         """coroutine function to receive data over socket"""
         data = []
-        loop = asyncio.get_running_loop
+        loop = asyncio.get_running_loop()
         # log start of execution
         logging.info("{t}       sock_server::get() started".format(t=datetime.utcnow().strftime('%H:%M:%S.%f')[:-3]))
         # create socket
-        #with socket.socket(self.family, self.type, self.protocol) as sock:
-        #    sock.bind((self.addr, self.port))       # bind to specific address and port
-        #    sock.listen()                           # enable server to accept connections
-        #    conn, addr = await loop.run_in_executor(None, sock.accept)
-        #    with conn:
-        #        # connected by addr
-        #        logging.info("{t}       sock_server::get() connected to {a}".format(t=datetime.utcnow().strftime('%H:%M:%S.%f')[:-3], a=addr))
-        #        while True:                         # loop over all blocking read calls
-        #            bytes = conn.recv(1024)         # block to read data from client
-        #            if not bytes:                   # data empty when client closes connection
-        #                break
-        #            conn.sendall(bytes)             # echo data back to client
-        #            data.append(bytes.decode("utf-8"))
-        with bluetooth.BluetoothSocket(bluetooth.RFCOMM) as s:
-            s.setblocking(True)
-            s.bind((self.addr, self.port))
-            s.listen()
-            conn, addr = await loop.run_in_executor(None, s.accept())
+        
+        # IP based socket
+        with socket.socket(self.family, self.type, self.protocol) as sock:
+            sock.bind((self.addr, self.port))       # bind to specific address and port
+            sock.listen()                           # enable server to accept connections
+            conn, addr = await loop.run_in_executor(None, sock.accept)
             with conn:
-                while True:
-                    bytes = conn.recv(1024)
-                    if not bytes:
+                # connected by addr
+                logging.info("{t}       sock_server::get() connected to {a}".format(t=datetime.utcnow().strftime('%H:%M:%S.%f')[:-3], a=addr))
+                while True:                         # loop over all blocking read calls
+                    bytes = conn.recv(1024)         # block to read data from client
+                    if not bytes:                   # data empty when client closes connection
                         break
+                    conn.sendall(bytes)             # echo data back to client
                     data.append(bytes.decode("utf-8"))
+        
+        # BT based socket
+        #with bluetooth.BluetoothSocket(bluetooth.RFCOMM) as s:
+        #    s.setblocking(True)
+        #    s.bind((self.addr, self.port))
+        #    s.listen()
+        #    conn, addr = await loop.run_in_executor(None, s.accept())
+        #    with conn:
+        #        while True:
+        #            bytes = conn.recv(1024)
+        #            if not bytes:
+        #                break
+        #            data.append(bytes.decode("utf-8"))
 
         # return all the data
         msg = ''.join(data)

@@ -7,14 +7,14 @@ from datetime import datetime
 import logging
 from jobs import *
 from sock_server import *
+from light_services import *
 
 
 # 1 ms definition
 ONE_MS = 0.001
 
 # task execution period
-IDLE_PERIOD      = 10*ONE_MS
-BLUETOOTH_PERIOD = 150*ONE_MS
+BLUETOOTH_PERIOD = 1*ONE_MS
 LIGHTING_PERIOD  = 100*ONE_MS
 
 # Job queue
@@ -23,17 +23,7 @@ jobQueue = asyncio.Queue(10)
 jobLock = asyncio.Lock()
 
 
-async def idle_coro():
-    while True:
-        # log the handler execution
-        #logging.info("{t}       Executing idle_coro()".format(t=datetime.utcnow().strftime('%H:%M:%S.%f')[:-3]))
-
-        # run every X ms
-        await asyncio.sleep(IDLE_PERIOD)
-
-
 async def bluetooth_coro():
-    #ip_addr = '127.0.0.1'
     ip_addr = ''
     ip_port = 65432
     bt_addr = '9c:b6:d0:c3:26:e8'
@@ -63,6 +53,8 @@ async def bluetooth_coro():
 
 
 async def lighting_coro():
+    servs = light_service()
+    loop = asyncio.get_running_loop()
     while True:
         # log the handler execution
         logging.info("{t}       Executing lighting_coro()".format(t=datetime.utcnow().strftime('%H:%M:%S.%f')[:-3]))
@@ -70,14 +62,16 @@ async def lighting_coro():
         # get job fifo lock
         async with jobLock:
             logging.info("{t}       lighting_coro() has job fifo lock".format(t=datetime.utcnow().strftime('%H:%M:%S.%f')[:-3]))
-            # get a job without blocking
+            
             try:
+                # get a job without blocking
                 job = jobQueue.get_nowait()
-                # TODO - process the job
-                logging.info("{t}       lighting_coro() processing a job".format(t=datetime.utcnow().strftime('%H:%M:%S.%f')[:-3]))
-
+                # process the job
+                # run in background to avoid blocking IO call
+                # TODO - maybe move this outside of jobLock??
+                await loop.run_in_executor(None, job.process, servs)
             except asyncio.QueueEmpty:
-                # nothing to do
+                # no job in queue
                 logging.info("{t}       lighting_coro() Job Queue Empty".format(t=datetime.utcnow().strftime('%H:%M:%S.%f')[:-3]))
 
         # run every X ms
@@ -88,7 +82,6 @@ async def schedule_tasks():
     tasks = []
 
     # create tasks
-    tasks.append(asyncio.create_task(idle_coro()))
     tasks.append(asyncio.create_task(bluetooth_coro()))
     tasks.append(asyncio.create_task(lighting_coro()))
 
