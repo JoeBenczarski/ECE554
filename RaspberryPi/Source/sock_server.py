@@ -3,8 +3,10 @@
 #
 
 import asyncio
-from datetime import datetime
+
 import logging
+from datetime import datetime
+
 import socket
 import bluetooth
 
@@ -24,9 +26,7 @@ class sock_server(object):
         loop = asyncio.get_running_loop()
         # log start of execution
         logging.info("{t}       sock_server::get() started".format(t=datetime.utcnow().strftime('%H:%M:%S.%f')[:-3]))
-        # create socket
-        
-        # IP based socket
+        # create IP socket
         with socket.socket(self.family, self.type, self.protocol) as sock:
             sock.bind((self.addr, self.port))       # bind to specific address and port
             sock.listen()                           # enable server to accept connections
@@ -35,24 +35,11 @@ class sock_server(object):
                 # connected by addr
                 logging.info("{t}       sock_server::get() connected to {a}".format(t=datetime.utcnow().strftime('%H:%M:%S.%f')[:-3], a=addr))
                 while True:                         # loop over all blocking read calls
-                    bytes = conn.recv(1024)         # block to read data from client
-                    if not bytes:                   # data empty when client closes connection
+                    dataBytes = conn.recv(1024)         # block to read data from client
+                    if not dataBytes:                   # data empty when client closes connection
                         break
-                    conn.sendall(bytes)             # echo data back to client
-                    data.append(bytes.decode("utf-8"))
-        
-        # BT based socket
-        #with bluetooth.BluetoothSocket(bluetooth.RFCOMM) as s:
-        #    s.setblocking(True)
-        #    s.bind((self.addr, self.port))
-        #    s.listen()
-        #    conn, addr = await loop.run_in_executor(None, s.accept())
-        #    with conn:
-        #        while True:
-        #            bytes = conn.recv(1024)
-        #            if not bytes:
-        #                break
-        #            data.append(bytes.decode("utf-8"))
+                    conn.sendall(dataBytes)             # echo data back to client
+                    data.append(dataBytes.decode("utf-8"))
 
         # return all the data
         msg = ''.join(data)

@@ -2,12 +2,19 @@
 # light_services.py
 #
 
+import asyncio
+
+import logging
+from datetime import datetime
+
 import time
 import RPi.GPIO as GPIO
  
 # Import the WS2801 module.
 import Adafruit_WS2801
 import Adafruit_GPIO.SPI as SPI
+
+from reverse_util import *
  
 # Configure the count of pixels:
 PIXEL_COUNT = 32
@@ -27,43 +34,99 @@ class light_service(object):
             'Shift Right': self.shift_right
         }
         self.pixels = Adafruit_WS2801.WS2801Pixels(PIXEL_COUNT, spi=SPI.SpiDev(SPI_PORT, SPI_DEVICE), gpio=GPIO)
+        self.size = self.pixels.count()
         
     def run(self, service_name, *args):
+        logging.info("{t}       light_service::run() looking up service".format(t=datetime.utcnow().strftime('%H:%M:%S.%f')[:-3]))
         self.services[service_name](*args)
+        logging.info("{t}       light_service::run() returned from service".format(t=datetime.utcnow().strftime('%H:%M:%S.%f')[:-3]))
+        
     
-    # Set the lights to rainbow color
-    def shift_left(self, leds=1, freq=0, colors=[(255,255,255)]):
-        pass
-
-    # Set the lights to rainbow color
-    def shift_right(self, leds=1, freq=0, colors=[(255,255,255)]):
-        pass
+    # Shift lights to the left
+    def shift_left(self, leds=1, freq=0, colors=[(255,255,255)], event=None):
+        logging.info("{t}       light_service::shift_left() running".format(t=datetime.utcnow().strftime('%H:%M:%S.%f')[:-3]))
+        colors = self._get_rgb_list(self.size, leds, colors)
+        self._set_all_pixels(colors)
+        while True:
+            if event.is_set():
+                logging.info("{t}       light_service::shift_left() event is set".format(t=datetime.utcnow().strftime('%H:%M:%S.%f')[:-3]))
+                break
+            time.sleep(freq/2)
+            rotate_left(colors, 1)
+            self._set_all_pixels(colors)
+        logging.info("{t}       light_service::shift_left() stopped".format(t=datetime.utcnow().strftime('%H:%M:%S.%f')[:-3]))
+        
+    # Shift lights to the right
+    def shift_right(self, leds=1, freq=0, colors=[(255,255,255)], event=None):
+        logging.info("{t}       light_service::shift_right() running".format(t=datetime.utcnow().strftime('%H:%M:%S.%f')[:-3]))
+        colors = self._get_rgb_list(self.size, leds, colors)
+        self._set_all_pixels(colors)
+        while True:
+            if event.is_set():
+                logging.info("{t}       light_service::shift_right() event is set".format(t=datetime.utcnow().strftime('%H:%M:%S.%f')[:-3]))
+                break
+            time.sleep(freq/2)
+            rotate_right(colors, 1)
+            self._set_all_pixels(colors)
+        logging.info("{t}       light_service::shift_right() stopped".format(t=datetime.utcnow().strftime('%H:%M:%S.%f')[:-3]))
     
     # Set the lights to pulse a color for a duration and frequency
-    def pulse(self, leds=1, freq=0, colors=[(255,255,255)]):
-        for color in colors:
-            self.pixels.set_pixels(self._RGB_to_color(color))
-            self.pixels.show()
-            time.sleep(freq)
+    def pulse(self, leds=1, freq=0.2, colors=[(255,255,255)], event=None):
+        logging.info("{t}       light_service::pulse() running".format(t=datetime.utcnow().strftime('%H:%M:%S.%f')[:-3]))
+        while True:
+            if event.is_set():
+                logging.info("{t}       light_service::pulse() event is set".format(t=datetime.utcnow().strftime('%H:%M:%S.%f')[:-3]))
+                break
+            for color in colors:
+                self.pixels.set_pixels(self._RGB_to_color(color))
+                self.pixels.show()
+                time.sleep(freq/2)
+        logging.info("{t}       light_service::pulse() stopped".format(t=datetime.utcnow().strftime('%H:%M:%S.%f')[:-3]))
 
     # Set the lights to a color and brightness
-    def solid(self, leds=1, freq=0, colors=[(255,255,255)]):
-        lights = self.pixels.count()
-        count = 0
-        while count < lights:
-            for color in colors:
-                for i in range(leds):
-                    if count >= lights:
-                        break
-                    self.pixels.set_pixel(count, self._RGB_to_color(color))
-                    count = count+1
-        self.pixels.show()
-    
+    def solid(self, leds=1, freq=0, colors=[(255,255,255)], event=None):
+        logging.info("{t}       light_service::solid() running".format(t=datetime.utcnow().strftime('%H:%M:%S.%f')[:-3]))
+        # get list of colors
+        colors = self._get_rgb_list(self.size, leds, colors)
+        self._set_all_pixels(colors)
+        logging.info("{t}       light_service::solid() stopped".format(t=datetime.utcnow().strftime('%H:%M:%S.%f')[:-3]))
+
     # Set the lights off
-    def off(self, leds=1, freq=0, colors=[(255,255,255)]):
+    def off(self, leds=1, freq=0, colors=[(255,255,255)], event=None):
+        logging.info("{t}       light_service::off() running".format(t=datetime.utcnow().strftime('%H:%M:%S.%f')[:-3]))
         self.pixels.clear()
         self.pixels.show()
+        logging.info("{t}       light_service::off() stopped".format(t=datetime.utcnow().strftime('%H:%M:%S.%f')[:-3]))
+    
+    # rotate an array in place to the left
+    def _rotate_left(self, arr, shift=1):
+        pass
+    
+    # rotate an array in place to the right
+    def _rotate_right(self, arr, shift=1):
+        pass
         
+    # Set all LEDs in strip
+    def _set_all_pixels(self, colors=[(255,255,255)]):
+        # get list of colors
+        for i in range(self.size):
+            self.pixels.set_pixel(i, self._RGB_to_color(colors[i]))
+        self.pixels.show()
+    
+    # Get an array of colors based on size, leds, and colors
+    def _get_rgb_list(self, size=32, leds=1, colors=[(255,255,255)]):
+        rgb_list = []
+        count = 0
+        while count < size:
+            for color in colors:
+                for i in range(leds):
+                    if count >= size:
+                        break
+                    rgb_list.append(color)
+                    count += 1
+        return rgb_list
+            
+    
     # Return separate R, G, B values from a RGB tuple
     def _get_rgb(self, tup):
         return tup[0], tup[1], tup[2]
