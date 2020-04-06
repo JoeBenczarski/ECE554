@@ -27,8 +27,6 @@ class job(object):
     def process(self, light_services, event):
         # log the processing
         logging.info("{t}       job::process() processing job".format(t=datetime.utcnow().strftime('%H:%M:%S.%f')[:-3]))
-        # clear event to allow this job to process
-        event.clear()
         # execute the service
         light_services.run(self.cmd, self.leds, self.freq, self.colors, event)
         logging.info("{t}       job::process() job finished".format(t=datetime.utcnow().strftime('%H:%M:%S.%f')[:-3]))
