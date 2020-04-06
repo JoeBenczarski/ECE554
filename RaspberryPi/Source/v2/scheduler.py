@@ -14,8 +14,8 @@ async def schedule_tasks():
 
     # schedule all coroutines as concurrent tasks
     await asyncio.gather(
-        input_coro(inQueue, inEvent),
-        process_coro(inQueue, outQueue),
-        output_coro(outQueue, inEvent)
+        input_coro(inQueue, inEvent, 0.500),
+        process_coro(inQueue, outQueue, 0.010),
+        output_coro(outQueue, inEvent, 0.250)
     )
     

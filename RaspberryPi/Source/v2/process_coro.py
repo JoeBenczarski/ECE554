@@ -2,7 +2,7 @@ import asyncio
 
 from jobs import job
 
-async def process_coro(in_queue, out_queue):
+async def process_coro(in_queue, out_queue, seconds):
     print('process_coro() started')
     while True:
         print('process_coro() running')
@@ -15,4 +15,4 @@ async def process_coro(in_queue, out_queue):
         await out_queue.put(newJob)
         print('process_coro() put job in queue: {}'.format(newJob.cmd))
         # allow other tasks to run
-        await asyncio.sleep(0.010)
+        await asyncio.sleep(seconds)

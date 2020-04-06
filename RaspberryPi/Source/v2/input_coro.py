@@ -3,7 +3,7 @@ import concurrent.futures
 
 from server import server
 
-async def input_coro(in_queue, in_event):
+async def input_coro(in_queue, in_event, seconds):
     print('input_coro() started')
     loop = asyncio.get_running_loop()
     sock = server('', 65432)
@@ -18,4 +18,4 @@ async def input_coro(in_queue, in_event):
         # set event for new input
         in_event.set()
         # allow other tasks to run
-        await asyncio.sleep(0.500)
+        await asyncio.sleep(seconds)
