@@ -18,4 +18,3 @@ async def schedule_tasks():
         process_coro(inQueue, outQueue, 0.010),
         output_coro(outQueue, inEvent, 0.250)
     )
-    
