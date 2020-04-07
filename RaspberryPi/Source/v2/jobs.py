@@ -9,14 +9,15 @@ from datetime import datetime
 
 from light_services import *
 
-
 class job(object):
 
     def __init__(self, raw_str):
+        # create default off job
         self.cmd = "Off"
         self.leds = 0
         self.freq = 0
         self.colors = [(0,0,0)]
+        # try to parse input string
         try:
             arr = raw_str.split(';')
             arr.pop()                     # remove empty entry

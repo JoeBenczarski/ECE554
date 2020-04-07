@@ -22,9 +22,9 @@ class ip_server(object):
         # client disconnected, now clean up
         self.client.close()
         self.client = None
-        self.client_addr = None        
+        self.client_addr = None
         print("client disconnected")
-        
+
     def get_req(self):
         req = None
         if self.client:
