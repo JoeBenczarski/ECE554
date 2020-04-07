@@ -17,8 +17,9 @@ async def output_coro(out_queue, in_event, seconds):
         print('output_coro() got from queue: {}'.format(currJob.cmd))
         # clear input event
         in_event.clear()
-        # run job processing in another thread
+        # process the job
         with concurrent.futures.ThreadPoolExecutor(max_workers=1) as pool:
+            print('output_coro() processing the job')
             future = await loop.run_in_executor(pool, currJob.process, services, in_event)
         # allow other tasks to run
         await asyncio.sleep(seconds)

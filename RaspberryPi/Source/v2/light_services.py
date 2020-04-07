@@ -3,14 +3,12 @@
 #
 
 import asyncio
+import time
 
 import logging
 from datetime import datetime
 
-import time
 import RPi.GPIO as GPIO
-
-# Import the WS2801 module.
 import Adafruit_WS2801
 import Adafruit_GPIO.SPI as SPI
 
@@ -37,66 +35,66 @@ class light_service(object):
         self.size = self.pixels.count()
 
     def run(self, service_name, *args):
-        logging.info("{t}       light_service::run() looking up service".format(t=datetime.utcnow().strftime('%H:%M:%S.%f')[:-3]))
+        #logging.info("{t}       light_service::run() looking up service".format(t=datetime.utcnow().strftime('%H:%M:%S.%f')[:-3]))
         self.services[service_name](*args)
-        logging.info("{t}       light_service::run() returned from service".format(t=datetime.utcnow().strftime('%H:%M:%S.%f')[:-3]))
+        #logging.info("{t}       light_service::run() returned from service".format(t=datetime.utcnow().strftime('%H:%M:%S.%f')[:-3]))
 
 
     # Shift lights to the left
     def shift_left(self, leds=1, freq=0, colors=[(255,255,255)], event=None):
-        logging.info("{t}       light_service::shift_left() running".format(t=datetime.utcnow().strftime('%H:%M:%S.%f')[:-3]))
+        #logging.info("{t}       light_service::shift_left() running".format(t=datetime.utcnow().strftime('%H:%M:%S.%f')[:-3]))
         colors = self._get_rgb_list(self.size, leds, colors)
         self._set_all_pixels(colors)
         while True:
             if event.is_set():
-                logging.info("{t}       light_service::shift_left() event is set".format(t=datetime.utcnow().strftime('%H:%M:%S.%f')[:-3]))
+                #logging.info("{t}       light_service::shift_left() event is set".format(t=datetime.utcnow().strftime('%H:%M:%S.%f')[:-3]))
                 break
             time.sleep(freq/2)
             rotate_left(colors, 1)
             self._set_all_pixels(colors)
-        logging.info("{t}       light_service::shift_left() stopped".format(t=datetime.utcnow().strftime('%H:%M:%S.%f')[:-3]))
+        #logging.info("{t}       light_service::shift_left() stopped".format(t=datetime.utcnow().strftime('%H:%M:%S.%f')[:-3]))
 
     # Shift lights to the right
     def shift_right(self, leds=1, freq=0, colors=[(255,255,255)], event=None):
-        logging.info("{t}       light_service::shift_right() running".format(t=datetime.utcnow().strftime('%H:%M:%S.%f')[:-3]))
+        #logging.info("{t}       light_service::shift_right() running".format(t=datetime.utcnow().strftime('%H:%M:%S.%f')[:-3]))
         colors = self._get_rgb_list(self.size, leds, colors)
         self._set_all_pixels(colors)
         while True:
             if event.is_set():
-                logging.info("{t}       light_service::shift_right() event is set".format(t=datetime.utcnow().strftime('%H:%M:%S.%f')[:-3]))
+                #logging.info("{t}       light_service::shift_right() event is set".format(t=datetime.utcnow().strftime('%H:%M:%S.%f')[:-3]))
                 break
             time.sleep(freq/2)
             rotate_right(colors, 1)
             self._set_all_pixels(colors)
-        logging.info("{t}       light_service::shift_right() stopped".format(t=datetime.utcnow().strftime('%H:%M:%S.%f')[:-3]))
+        #logging.info("{t}       light_service::shift_right() stopped".format(t=datetime.utcnow().strftime('%H:%M:%S.%f')[:-3]))
 
     # Set the lights to pulse a color for a duration and frequency
     def pulse(self, leds=1, freq=0.2, colors=[(255,255,255)], event=None):
-        logging.info("{t}       light_service::pulse() running".format(t=datetime.utcnow().strftime('%H:%M:%S.%f')[:-3]))
+        #logging.info("{t}       light_service::pulse() running".format(t=datetime.utcnow().strftime('%H:%M:%S.%f')[:-3]))
         while True:
             if event.is_set():
-                logging.info("{t}       light_service::pulse() event is set".format(t=datetime.utcnow().strftime('%H:%M:%S.%f')[:-3]))
+                #logging.info("{t}       light_service::pulse() event is set".format(t=datetime.utcnow().strftime('%H:%M:%S.%f')[:-3]))
                 break
             for color in colors:
                 self.pixels.set_pixels(self._RGB_to_color(color))
                 self.pixels.show()
                 time.sleep(freq/2)
-        logging.info("{t}       light_service::pulse() stopped".format(t=datetime.utcnow().strftime('%H:%M:%S.%f')[:-3]))
+        #logging.info("{t}       light_service::pulse() stopped".format(t=datetime.utcnow().strftime('%H:%M:%S.%f')[:-3]))
 
     # Set the lights to a color and brightness
     def solid(self, leds=1, freq=0, colors=[(255,255,255)], event=None):
-        logging.info("{t}       light_service::solid() running".format(t=datetime.utcnow().strftime('%H:%M:%S.%f')[:-3]))
+        #logging.info("{t}       light_service::solid() running".format(t=datetime.utcnow().strftime('%H:%M:%S.%f')[:-3]))
         # get list of colors
         colors = self._get_rgb_list(self.size, leds, colors)
         self._set_all_pixels(colors)
-        logging.info("{t}       light_service::solid() stopped".format(t=datetime.utcnow().strftime('%H:%M:%S.%f')[:-3]))
+        #logging.info("{t}       light_service::solid() stopped".format(t=datetime.utcnow().strftime('%H:%M:%S.%f')[:-3]))
 
     # Set the lights off
     def off(self, leds=1, freq=0, colors=[(255,255,255)], event=None):
-        logging.info("{t}       light_service::off() running".format(t=datetime.utcnow().strftime('%H:%M:%S.%f')[:-3]))
+        #logging.info("{t}       light_service::off() running".format(t=datetime.utcnow().strftime('%H:%M:%S.%f')[:-3]))
         self.pixels.clear()
         self.pixels.show()
-        logging.info("{t}       light_service::off() stopped".format(t=datetime.utcnow().strftime('%H:%M:%S.%f')[:-3]))
+        #logging.info("{t}       light_service::off() stopped".format(t=datetime.utcnow().strftime('%H:%M:%S.%f')[:-3]))
 
     # rotate an array in place to the left
     def _rotate_left(self, arr, shift=1):
