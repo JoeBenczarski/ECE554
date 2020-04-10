@@ -1,0 +1,29 @@
+<resources>
+    <string name="app_name">Light_Controller</string>
+    <string-array name="light_options">
+        <item>Solid</item>
+        <item>Pulse</item>
+        <item>Shift Left</item>
+        <item>Shift Right</item>
+        <item>Off</item>
+    </string-array>
+
+    <string-array name="Frequency">
+        <item>0</item>
+        <item>0.1</item>
+        <item>0.2</item>
+        <item>0.5</item>
+        <item>0.8</item>
+        <item>1.0</item>
+        <item>2.0</item>
+        <item>5.0</item>
+    </string-array>
+
+    <string-array name="numLEDs">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+    </string-array>
+
+</resources>
