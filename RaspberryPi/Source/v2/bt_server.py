@@ -1,4 +1,4 @@
-import bluetooth
+from bluetooth import *
 
 class bt_server(object):
 
@@ -6,7 +6,7 @@ class bt_server(object):
         self.host = host
         self.port = port
         self.limit = limit
-        self.sock = bluetooth.BluetoothSocket(bluetooth.RFCOMM)
+        self.sock = BluetoothSocket(RFCOMM)
         self.client = None
         self.client_addr = None
         self.sock.bind((host, port))
@@ -27,13 +27,17 @@ class bt_server(object):
     def get_req(self):
         req = None
         if self.client:
-            data = self.client.recv(self.limit)
-            if not data:
-                # client closed the connection
+            try:
+                data = self.client.recv(self.limit)
+                if not data:
+                    # client closed the connection
+                    self.disconnect()
+                else:
+                    # acknowledge the req
+                    self.client.send(b"ACK")
+                    # decode the received bytes
+                    req = data.decode("utf-8")
+            except:
+                # client closed unexpectedly
                 self.disconnect()
-            else:
-                # acknowledge the req
-                self.client.send(b"ACK")
-                # decode the received bytes
-                req = data.decode("utf-8")
-        return req
+            return req
