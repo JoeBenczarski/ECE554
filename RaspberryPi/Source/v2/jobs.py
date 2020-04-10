@@ -29,6 +29,7 @@ class job(object):
                 rgb = i.split(',')
                 self.colors.append((int(rgb[0]), int(rgb[1]), int(rgb[2])))
         except:
+            print("Job parsing exception: {}".format(raw_str))
             pass
 
     def process(self, light_services, event):
