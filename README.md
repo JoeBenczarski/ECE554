@@ -6,6 +6,7 @@ To run the android application on an emulator:
 3. Select Android_Application within the extracted zip file.
 4. Select Pixel 2 as the emulated device.
 5. Run the program.
+
 *Please note the bluetooth functionality is only available if the application is implemented on an actual phone*
 
 To run the Raspberry Pi code on a Raspberry Pi:
@@ -24,5 +25,6 @@ To run the Raspberry Pi code on a Raspberry Pi:
 9. Install asyncio library within the command prompt utilizing: pip install asyncio
 10. Ensure bluetooth is discoverable on the pi.
 11. Run the python script main located within RaspberryPi/Source/v2
+
 *Please note, to enable the script to run on startup of the pi you must edit: sudo nano /etc/rc.local
 within this area add the python script (e.g. sudo python3 /home/pi/sample.py &) after this reboot the pi*
