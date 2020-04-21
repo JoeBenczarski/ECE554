@@ -4,10 +4,15 @@ To run the android application on an emulator:
 1. Download and install Android Studio.
 2. Select open an existing android studio project.
 3. Select Android_Application within the extracted zip file.
-4. Select Pixel 2 as the emulated device.
-5. Run the program.
+4. Create an emulated device using the AVD manager (Pixel 2 will suffice), or
+  5a. Open your settings and find the build number (will most likely be  Settings > About Phone > Build Number)
+  5b. Tap the build number seven times to enable developer options.
+  5c. Enable USB debugging (can most likely be found at Settings > System > Advanced > Developer Options > USB debugging)
+  5d. Connect your phone to your computer using a USB cable.
+6. Select your device from step 4 or step 5 as the emulated device, by checking the dropdown in the top-center portion of the screen.
+7. Run the program, by pressing the green triangle next to the dropdown from step 6. The application will deploy to your device.
 
-*Please note the bluetooth functionality is only available if the application is implemented on an actual phone*
+*Please note the bluetooth functionality is only available if the application is implemented on an actual smartphone*
 
 To run the Raspberry Pi code on a Raspberry Pi:
 1. Open command prompt and install BlueZ bluetooth protocol stack using the command: sudo apt-get install bluetooth blueman bluez
