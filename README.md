@@ -5,10 +5,10 @@ To run the android application on an emulator:
 2. Select open an existing android studio project.
 3. Select Android_Application within the extracted zip file.
 4. Create an emulated device using the AVD manager (Pixel 2 will suffice), or
-  5a. Open your settings and find the build number (will most likely be  Settings > About Phone > Build Number)
-  5b. Tap the build number seven times to enable developer options.
-  5c. Enable USB debugging (can most likely be found at Settings > System > Advanced > Developer Options > USB debugging)
-  5d. Connect your phone to your computer using a USB cable.
+5a. Open your settings and find the build number (will most likely be  Settings > About Phone > Build Number)
+5b. Tap the build number seven times to enable developer options.
+5c. Enable USB debugging (can most likely be found at Settings > System > Advanced > Developer Options > USB debugging)
+5d. Connect your phone to your computer using a USB cable.
 6. Select your device from step 4 or step 5 as the emulated device, by checking the dropdown in the top-center portion of the screen.
 7. Run the program, by pressing the green triangle next to the dropdown from step 6. The application will deploy to your device.
 
