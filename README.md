@@ -5,7 +5,7 @@ To run the android application on an emulator:
 2. Select open an existing android studio project.
 3. Select Android_Application within the extracted zip file.
 4. Create an emulated device using the AVD manager (Pixel 2 will suffice), or
-5. a) Open your settings and find the build number (will most likely be  Settings > About Phone > Build Number)
+5. a) Open your settings on your Android smartphone and find the build number (will most likely be  Settings > About Phone > Build Number)
 
    b) Tap the build number seven times to enable developer options.
    
