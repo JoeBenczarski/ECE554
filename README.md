@@ -13,6 +13,8 @@ To run the android application on an emulator:
    
    d) Connect your phone to your computer using a USB cable.
    
+   e) Source: https://developer.android.com/studio/debug/dev-options
+   
 6. Select your device from step 4 or step 5 as the emulated device, by checking the dropdown in the top-center portion of the screen.
 7. Run the program, by pressing the green triangle next to the dropdown from step 6. The application will deploy to your device.
 
